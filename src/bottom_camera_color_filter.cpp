@@ -9,10 +9,10 @@
 using namespace cv;
 
 static const std::string OPENCV_WINDOW = "Image window";
-
+/*
 int input = 0;
 string input = " ";
-
+*/
 class ImageConverter
 {
 	ros::NodeHandle nh_;
@@ -50,12 +50,17 @@ void imageCb (const sensor_msgs::ImageConstPtr& msg)
 	}
 	
 	//Do some shit like draw a big circle
+	if (cv_ptr->image.rows > 60 && cv_ptr->image.cols > 60) 
+			cv::circle(cv_ptr->image, cv::Point(50,50), 10, CV_RGB(255,0,0)); //success it works
+	
+	/* keep working on this if statement
 	if 
 		if (cv_ptr->image.rows > 60 && cv_ptr->image.cols > 60) 
 			cv::circle(cv_ptr->image, cv::Point(50,50), 10, CV_RGB(255,0,0)); //success it works
 	else
 		//do nothing
 		break;
+	*/
 	
 	//Update GUI
 	cv::imshow(OPENCV_WINDOW, cv_ptr->image);
@@ -68,6 +73,7 @@ void imageCb (const sensor_msgs::ImageConstPtr& msg)
 
 int main(int argc, char** argv)
 {
+	/*
 	cout <<"Enter integer for desired video output:\n>";
 	getline(cin, input);
 	cout <<"Mode: " << input << endl << endl;
@@ -76,7 +82,7 @@ int main(int argc, char** argv)
 	{
 		cout <<"Please enter valid number: "<<endl;
 		getline 
-
+*/
 	ros::init(argc, argv, "image_converter");
 	ImageConverter ic;
 	ros::spin();
