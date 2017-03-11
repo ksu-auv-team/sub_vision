@@ -7,10 +7,11 @@ project(sub_vision)
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   roscpp
-  rospy
   std_msgs
+  image_transport
 )
 
+find_package(OpenCV REQUIRED PATHS /root/opencv/cv3-release)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -140,6 +141,17 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+add_executable(object_idenifier src/object_idenifier.cpp)
+target_link_libraries(object_idenifier
+  ${catkin_LIBRARIES}
+   ${OpenCV_LIBRARIES}
+)
+
+add_executable(bottom_camera_color_filter src/bottom_camera_color_filter.cpp)
+target_link_libraries(bottom_camera_color_filter
+  ${catkin_LIBRARIES}
+   ${OpenCV_LIBRARIES}
+)
 #############
 ## Install ##
 #############

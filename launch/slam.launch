@@ -1,0 +1,20 @@
+<launch>
+		<!--start zed ros wrapper-->
+	<node name="ZED_cam" pkg="zed_wrapper" type="zed_wrapper_node" output="screen">
+	<param name="resolution" value="2"/>
+	<param name="frame_rate" value="60"/>
+	<param name="quality" value="3"/>
+	</node>
+	
+	<!-- Start zed_tf, shows odometery and localization
+	reference from zed_tf.launch
+	-->
+  <arg name="camera" default="zed"/>
+  <arg name="tf_prefix" default="" />
+  <arg name="pi/2" value="1.5707963267948966" />
+  <arg name="optical_rotate" value="0 0 0 -$(arg pi/2) 0 -$(arg pi/2)" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg camera)_base_link1"
+    args="0 0 0 0 0 0 1 map $(arg tf_prefix)/$(arg camera)_initial_frame" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg camera)_base_link3"
+    args="0 0 0 0 0 0 1 $(arg tf_prefix)/$(arg camera)_current_frame ZED_left_camera" />
+</launch>
