@@ -147,11 +147,11 @@ target_link_libraries(object_idenifier
    ${OpenCV_LIBRARIES}
 )
 
-add_executable(bottom_camera_color_filter src/bottom_camera_color_filter.cpp)
-target_link_libraries(bottom_camera_color_filter
-  ${catkin_LIBRARIES}
-   ${OpenCV_LIBRARIES}
-)
+#add_executable(bottom_camera_color_filter src/bottom_camera_color_filter.cpp)
+#target_link_libraries(bottom_camera_color_filter
+  #${catkin_LIBRARIES}
+   #${OpenCV_LIBRARIES}
+#)
 #############
 ## Install ##
 #############
