@@ -9,12 +9,12 @@ using namespace cv;
 
 //Std Threshold values used, the values are based on RGB from competions rules
 //For green ground robot
-int lMin =(31+128)-(31+128)*.20; 
-int aMin =(-34+128)-(-34+128)*.20;	
-int bMin =(33+128)-(33+128)*.20;	
-int lMax =(31+128)+(31+128)*.20;
-int aMax =(-34+128)+(-34+128)*.20;
-int bMax =(33+128)+(33+128)*.20;
+int lMin =0; 
+int aMin =0;	
+int bMin =0;	
+int lMax =255;
+int aMax =255;
+int bMax =255;
 
 void calibrationBars(int, void*) {}
 
@@ -34,7 +34,7 @@ int main( int argc, char** argv ){
 		//Std Altitude Threshold
 		inRange(labcs, Scalar(lMin, aMin, bMin), Scalar(lMax, aMax, bMax), Thresh1);
 		//Low Altitude Threshold
-		inRange(labcs, Scalar(64, 111, 125), Scalar(145, 124, 219),Thresh2);
+		inRange(labcs, Scalar(0, 194, 71), Scalar(12, 255, 171),Thresh2);
 		////Noise reduction
 		Mat erodeElement2 = getStructuringElement(MORPH_RECT, Size(21, 21));
 		//Mat dilateElement2 = getStructuringElement(MORPH_RECT, Size(9, 9));
@@ -63,6 +63,7 @@ int main( int argc, char** argv ){
 				ySum += contoursPoints[i].y; 
 			}
 			center = Point(xSum/contoursPoints.size(),ySum/contoursPoints.size());
+			pubLocation.data=(center);
 			//cout <<"< " <<center.x <<" , " <<center.y <<" >" <<endl;
 			drawContours(color, contours, lrgContour, Scalar(0, 0, 255), 3, 8, vector<Vec4i>(), 0, Point());
 			circle(color, center, 5, Scalar(255, 0, 0), FILLED, LINE_8);
