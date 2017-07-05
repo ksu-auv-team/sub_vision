@@ -1,8 +1,13 @@
 #include <ros/ros.h>
+#include <string>
+#include <geometry_msgs/Twist.h>
 #include "opencv2/imgproc.hpp"
+#include <std_msgs/Int32MultiArray.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <math.h>
+#include <fstream>
 #include <iostream>
+#include <numeric>
 
 using namespace std;
 using namespace cv;
@@ -15,12 +20,17 @@ int bMin =0;
 int lMax =255;
 int aMax =255;
 int bMax =255;
+ros::Publisher msg;
+std_msgs::Int32MultiArray pubLocation;
 
 void calibrationBars(int, void*) {}
 
 int main( int argc, char** argv ){
-	VideoCapture cap(1);
-	Mat color,labcs,labThresh,Thresh1,Thresh2;
+	ros::init(argc, argv,"orangeTest");
+	ros::NodeHandle nh;
+	msg=nh.advertise<std_msgs::Int32MultiArray>("std_msgs/Int32MultiArray", 1000);
+	VideoCapture cap(0);
+	Mat color,hsv,Thresh1,Thresh2;
 	if (!cap.isOpened()){
 		return -1;
 	}
@@ -29,22 +39,23 @@ int main( int argc, char** argv ){
 		//Passing video footage
 		cap>>color;
 		//Define CIE Lab img and smooth it
-		cvtColor(color, labcs, COLOR_BGR2Lab);
-		medianBlur(labcs,labcs,11);
+		cvtColor(color, hsv, COLOR_BGR2HSV);
+		medianBlur(hsv,hsv,11);
 		//Std Altitude Threshold
-		inRange(labcs, Scalar(lMin, aMin, bMin), Scalar(lMax, aMax, bMax), Thresh1);
+		//inRange(hsv, Scalar(lMin, aMin, bMin), Scalar(lMax, aMax, bMax), Thresh1);
 		//Low Altitude Threshold
-		inRange(labcs, Scalar(0, 194, 71), Scalar(12, 255, 171),Thresh2);
+		inRange(hsv, Scalar(0, 156, 153), Scalar(255, 124, 255), Thresh1);
+		inRange(hsv, Scalar(0, 194, 71), Scalar(12, 255, 171),Thresh2);
 		////Noise reduction
 		Mat erodeElement2 = getStructuringElement(MORPH_RECT, Size(21, 21));
 		//Mat dilateElement2 = getStructuringElement(MORPH_RECT, Size(9, 9));
 		erode(Thresh2, Thresh2, erodeElement2);
 		//dilate(Thresh2, Thresh2, dilateElement2);
 		////Combine the two Thresholds
-		labThresh = Thresh1;//|Thresh2;
+		hsv = Thresh1|Thresh2;
 		//Blob detection and center point generation 
 		vector<vector<Point> > contours;
-		findContours(labThresh, contours, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
+		findContours(hsv, contours, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
 		vector<float> areas;
 		vector<Point> contoursPoints;
 		int lrgContour;
@@ -63,14 +74,20 @@ int main( int argc, char** argv ){
 				ySum += contoursPoints[i].y; 
 			}
 			center = Point(xSum/contoursPoints.size(),ySum/contoursPoints.size());
-			pubLocation.data=(center);
+			pubLocation.data.push_back(center.x);
+			pubLocation.data.push_back(center.y);
 			//cout <<"< " <<center.x <<" , " <<center.y <<" >" <<endl;
 			drawContours(color, contours, lrgContour, Scalar(0, 0, 255), 3, 8, vector<Vec4i>(), 0, Point());
 			circle(color, center, 5, Scalar(255, 0, 0), FILLED, LINE_8);
 		}
-		imshow("Thresh",labThresh);
-		//imshow("Labcs",labcs);
+		imshow("Thresh", hsv);
+		//imshow("hsv", hsv);
+		msg.publish(pubLocation);
 		imshow("Original",color);
-		waitKey(5);
+		waitKey(10);
+		ros::Rate rate(10);
+		ros::spinOnce();
+		rate.sleep();
+		
 	}
 }

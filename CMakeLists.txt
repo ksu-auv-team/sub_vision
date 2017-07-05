@@ -147,6 +147,18 @@ target_link_libraries(object_idenifier
    ${OpenCV_LIBRARIES}
 )
 
+add_executable(OCDAL blob_detection/OCDAL.cpp)
+target_link_libraries(OCDAL
+	${catkin_LIBRARIES}
+	${OpenCV_LIBRARIES}
+)
+
+add_executable(orangeTest blob_detection/orangeTest.cpp)
+target_link_libraries(orangeTest
+	${catkin_LIBRARIES}
+	${OpenCV_LIBRARIES}
+)
+
 #add_executable(bottom_camera_color_filter src/bottom_camera_color_filter.cpp)
 #target_link_libraries(bottom_camera_color_filter
   #${catkin_LIBRARIES}
