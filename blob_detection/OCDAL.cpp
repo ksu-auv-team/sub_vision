@@ -87,7 +87,7 @@ int main(int argc, char **argv){
 	std::ostringstream disTxt;
 	int pixelWidth;
 	double dist;
-	VideoCapture cap(1); //Webcam 0, USB Cam 1
+	VideoCapture cap(0); //Webcam 0, USB Cam 1
 	if (!cap.isOpened()){
 		ROS_ERROR("camera not open");
 		return -1;
