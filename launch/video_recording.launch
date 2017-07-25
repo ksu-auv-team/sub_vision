@@ -1,0 +1,7 @@
+<launch>	
+<!--Record data-->
+	<node name="point_cloud_recording" pkg="sub_vision" type="rosbag_point_cloud.sh" output="screen"/>
+	<node name="zed_left_recording" pkg="sub_vision" type="rosbag_zed_left.sh" output="screen"/>
+	<node name="zed_right_recording" pkg="sub_vision" type="rosbag_zed_right.sh" output="screen"/>
+	<node name="bottom_cam_recording" pkg="sub_vision" type="rosbag_bottom_cam.sh" output="screen"/>
+</launch>
