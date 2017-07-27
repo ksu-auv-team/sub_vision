@@ -1,13 +1,6 @@
 <launch>
-	<!--start zed camera-->
-	<node name="ZED_cam" pkg="zed_wrapper" type="zed_wrapper_node" output="screen">
-	<param name="resolution" value="2"/>
-	<param name="frame_rate" value="30"/>
-	<param name="quality" value="3"/>
-	</node>
-
-	<!--Run usb_cam to get image-->
-  	<node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+	<!--Run bottom camera-->
+  	<node name="bottom_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
 	<param name="video_device" value="/dev/video1" />
     	<param name="image_width" value="640" />
     	<param name="image_height" value="480" />
@@ -15,9 +8,18 @@
     	<param name="camera_frame_id" value="usb_cam" />
     	<param name="io_method" value="mmap"/>
 	</node>
+
+	<!--Run front camera-->
+  	<node name="front_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+	<param name="video_device" value="/dev/video2" />
+    	<param name="image_width" value="640" />
+    	<param name="image_height" value="480" />
+   	<param name="pixel_format" value="yuyv" />
+    	<param name="camera_frame_id" value="usb_cam" />
+    	<param name="io_method" value="mmap"/>
+	</node>
+	
 		<!--Record data-->
-	<node name="point_cloud_recording" pkg="sub_vision" type="rosbag_point_cloud.sh" output="screen"/>
-	<node name="zed_left_recording" pkg="sub_vision" type="rosbag_zed_left.sh" output="screen"/>
-	<node name="zed_right_recording" pkg="sub_vision" type="rosbag_zed_right.sh" output="screen"/>
+	<node name="front_cam_recording" pkg="sub_vision" type="rosbag_front_cam.sh" output="screen"/>
 	<node name="bottom_cam_recording" pkg="sub_vision" type="rosbag_bottom_cam.sh" output="screen"/>
 </launch>
