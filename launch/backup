@@ -1,0 +1,8 @@
+	<!--
+	<!--start zed camera-->
+	<node name="ZED_cam" pkg="zed_wrapper" type="zed_wrapper_node" output="screen">
+	<param name="resolution" value="2"/>
+	<param name="frame_rate" value="30"/>
+	<param name="quality" value="3"/>
+	</node>
+	-->
